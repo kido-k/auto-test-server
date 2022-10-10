@@ -1,15 +1,17 @@
 version: "3"
 services:
   selenium:
-    image: selenium/standalone-chrome-debug:3.2.0-actinium
-    ports:
-      - 4444:4444
-      - 5900:5900
-  app:
-    build: ./app
+    image: selenium/standalone-chrome
+    container_name: 'selenium'
     volumes:
-      - ./app:/app
       - /dev/shm:/dev/shm
-    environment:
-      SELENIUM_URL: http://selenium:4444/wd/hub
+  python3:
+    restart: always
+    build: .
+    container_name: 'py3-container'
+    working_dir: '/var/app'
     tty: true
+    volumes:
+      - ./app:/var/app
+    depends_on:
+      - selenium
